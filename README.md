@@ -1,14 +1,14 @@
- AeroGuard AI – Aircraft Engine Health Monitoring System
+##  AeroGuard AI – Aircraft Engine Health Monitoring System
 
 An AI-powered predictive maintenance application that estimates the Remaining Useful Life (RUL) of aircraft engines using NASA C-MAPSS FD001 data and Machine Learning.
 
-📌 Project Overview
+#📌 Project Overview
 
 AeroGuard AI uses a Random Forest Regression model to predict the remaining operating cycles of an aircraft engine before its dataset-defined failure point.
 
 The application provides a web dashboard where users can enter engine operating conditions and sensor readings to receive an estimated RUL prediction.
 
-🎯 Project Objectives
+#🎯 Project Objectives
 
 Predict aircraft engine Remaining Useful Life (RUL).
 
@@ -20,7 +20,7 @@ Evaluate and optimize model performance.
 
 Display predictions through an interactive web dashboard.
 
-🛠️ Technologies Used
+#🛠️ Technologies Used
 
 Category
 
@@ -58,7 +58,7 @@ Dataset
 
 NASA C-MAPSS FD001
 
-🧠 Machine Learning Workflow
+#🧠 Machine Learning Workflow
 
 Load NASA C-MAPSS FD001 dataset.
 
@@ -79,7 +79,7 @@ Perform hyperparameter tuning.
 Compare original and tuned models.
 
 Integrate the tuned model with FastAPI.
-
+#
 📊 Model Performance
 
 Evaluation Metric
@@ -102,7 +102,7 @@ RMSE
 
 The tuned model achieved a slight improvement over the original model on the NASA FD001 test dataset.
 
-🔍 Feature Importance
+#🔍 Feature Importance
 
 Top features identified by the original Random Forest model:
 
@@ -116,7 +116,7 @@ Sensor 4 – 4.70%
 
 These scores indicate how much the model relied on each feature when making predictions.
 
-🌐 Application Features
+#🌐 Application Features
 
 Interactive engine health monitoring dashboard.
 
@@ -132,7 +132,7 @@ Original and tuned Random Forest models.
 
 Model evaluation and feature importance analysis.
 
-🏗️ Project Architecture
+#🏗️ Project Architecture
 
 AeroGuard_AI/
 │
@@ -160,7 +160,7 @@ AeroGuard_AI/
 ├── tune_nasa_model.py
 └── compare_models.py
 
-⚙️ Installation and Execution
+#⚙️ Installation and Execution
 
 1. Clone the repository
 
@@ -191,7 +191,7 @@ API documentation:
 
 http://127.0.0.1:8000/docs
 
-📈 Future Enhancements
+#📈 Future Enhancements
 
 Compare multiple ML algorithms.
 
@@ -209,6 +209,6 @@ This is an educational Machine Learning project using the NASA C-MAPSS benchmark
 
 👨‍💻 Author
 
-Your Name
+Gunda Jeshwanth
 
 Machine Learning | Python | Predictive Maintenance | Data Analytics
