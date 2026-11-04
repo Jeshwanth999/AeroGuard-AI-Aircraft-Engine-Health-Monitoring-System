@@ -1,149 +1,192 @@
-# AeroGuard AI — Aircraft Engine Health Intelligence
+# ✈️ AeroGuard AI – Aircraft Engine Health Monitoring System
 
-A full-stack aerospace + machine-learning portfolio project. It accepts engine sensor readings, predicts a synthetic risk category, estimates remaining useful life (RUL) in cycles, shows global model feature importance, and stores prediction history.
+An end-to-end Machine Learning project that predicts the **Remaining Useful Life (RUL)** of aircraft engines using NASA C-MAPSS sensor data.
 
-> **Important:** This is an educational prototype trained on generated synthetic data. It is not validated against real aircraft data, certified, or suitable for flight operations, maintenance decisions, or safety-critical use. Sensor ranges and generated labels are demonstration assumptions only.
+## 🚀 Project Overview
 
-## Features
+AeroGuard AI is a predictive maintenance application designed to estimate how many operational cycles an aircraft engine can continue running before it reaches its end of useful life.
 
-- **Frontend:** Responsive HTML, CSS, JavaScript dashboard with Chart.js.
-- **Backend:** FastAPI REST API with request validation.
-- **ML:** Random Forest classifier for LOW / MODERATE / HIGH risk and Random Forest regressor for estimated RUL.
-- **Explainability:** Displays global feature importance. This is not a causal or per-prediction explanation.
-- **Database:** SQLite prediction history.
-- **Model metrics:** Validation accuracy and RUL MAE displayed on the dashboard.
-- **API docs:** Interactive Swagger docs at `/docs`.
+The system uses historical engine sensor measurements and Machine Learning regression models to predict Remaining Useful Life (RUL).
 
-## Architecture
+It includes a FastAPI backend and an interactive web dashboard for submitting engine sensor readings and viewing predictions.
 
-```text
-Browser dashboard (HTML/CSS/JS + Chart.js)
-                 |
-                 | HTTP / JSON
-                 v
-          FastAPI REST API
-           /      |       \
-          /       |        \
-   ML Engine   SQLite DB   Metrics
-      |
-      +-- RandomForest risk classifier
-      +-- RandomForest RUL regressor
-      |
-      v
- Synthetic training data (generated in Python)
-```
+## 🎯 Key Features
 
-## Project structure
+- NASA C-MAPSS FD001 dataset integration
+- Aircraft engine Remaining Useful Life prediction
+- Random Forest Regression model
+- Hyperparameter tuning
+- Model performance comparison
+- Feature importance analysis
+- Interactive web dashboard
+- FastAPI prediction API
+- Engine prediction history and metrics
+
+## 🧠 Machine Learning Workflow
+
+1. Load NASA C-MAPSS FD001 dataset.
+2. Perform data preprocessing and feature preparation.
+3. Generate RUL target values from engine cycles.
+4. Train a Random Forest Regression model.
+5. Evaluate model performance.
+6. Perform hyperparameter tuning.
+7. Compare original and tuned models.
+8. Integrate the trained model with FastAPI.
+9. Display predictions through the web dashboard.
+
+## 📊 Model Performance
+
+The following results were obtained on the NASA FD001 test dataset.
+
+| Metric | Original Model | Tuned Model |
+|---|---:|---:|
+| MAE | 13.37 | 13.34 |
+| RMSE | 17.84 | 17.77 |
+
+**Observation:** Hyperparameter tuning produced a small improvement in both MAE and RMSE.
+
+- MAE: Mean Absolute Error
+- RMSE: Root Mean Squared Error
+
+## 🔍 Feature Importance
+
+Top important features identified by the Random Forest model:
+
+| Feature | Importance |
+|---|---:|
+| sensor_11 | 0.497996 |
+| cycle | 0.259288 |
+| sensor_9 | 0.055090 |
+| sensor_4 | 0.047006 |
+| sensor_12 | 0.021992 |
+| sensor_7 | 0.017822 |
+| sensor_14 | 0.016166 |
+| sensor_15 | 0.015662 |
+| sensor_21 | 0.010687 |
+| sensor_2 | 0.010080 |
+
+## 🛠️ Technologies Used
+
+**Programming:** Python
+
+**Machine Learning:** Scikit-learn, Random Forest Regression
+
+**Data Processing:** Pandas, NumPy
+
+**Visualization:** Matplotlib
+
+**Backend:** FastAPI, Uvicorn
+
+**Frontend:** HTML, CSS, JavaScript
+
+**Model Storage:** Joblib
+
+**Dataset:** NASA C-MAPSS FD001
+
+## 📁 Project Structure
 
 ```text
 AeroGuard_AI/
+│
 ├── app/
-│   ├── __init__.py
-│   ├── main.py
-│   ├── ml_engine.py
-│   └── static/
-│       ├── index.html
-│       ├── style.css
-│       └── app.js
+│   └── main.py
+│
 ├── data/
-├── tests/
-│   └── test_api.py
+│   └── nasa/
+│       ├── train_FD001.txt
+│       ├── test_FD001.txt
+│       └── RUL_FD001.txt
+│
+├── models/
+│   ├── nasa_fd001_rul.joblib
+│   └── nasa_fd001_tuned.joblib
+│
+├── static/
+│   ├── index.html
+│   ├── style.css
+│   └── app.js
+│
+├── train_nasa_model.py
+├── evaluate_nasa_model.py
+├── tune_nasa_model.py
+├── compare_models.py
+├── feature_importance.py
 ├── requirements.txt
-├── run_windows.bat
-├── run_mac_linux.sh
 └── README.md
 ```
 
-## Run locally
+*Note: Update this structure if your actual repository folders or filenames are different.*
 
-### 1. Install Python
-Use Python 3.10–3.12. Confirm:
+## ⚙️ Installation and Setup
+
+### 1. Clone the Repository
 
 ```bash
-python --version
+git clone YOUR_GITHUB_REPOSITORY_URL
 ```
 
-### 2. Open terminal in the project folder
+### 2. Navigate to Project Folder
 
-Windows:
+```bash
+cd AeroGuard_AI
+```
+
+### 3. Create Virtual Environment
+
+```bash
+python -m venv venv
+```
+
+### 4. Activate Virtual Environment
+
+**Windows PowerShell:**
 
 ```powershell
-py -m venv .venv
-.venv\Scripts\activate
-pip install -r requirements.txt
-uvicorn app.main:app --reload
+.\venv\Scripts\Activate.ps1
 ```
 
-macOS / Linux:
+### 5. Install Dependencies
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
 pip install -r requirements.txt
+```
+
+### 6. Run the Application
+
+```bash
 uvicorn app.main:app --reload
 ```
 
-### 3. Open the application
+### 7. Open the Dashboard
 
-- Dashboard: http://127.0.0.1:8000
-- API documentation: http://127.0.0.1:8000/docs
-- Health endpoint: http://127.0.0.1:8000/api/health
-
-The ML models train automatically when the backend starts. The first startup may take a few seconds.
-
-## API endpoints
-
-| Method | Endpoint | Purpose |
-|---|---|---|
-| GET | `/api/health` | Check API status |
-| GET | `/api/metrics` | Get model validation metrics |
-| POST | `/api/predict` | Predict risk and RUL |
-| GET | `/api/history` | Read recent prediction history |
-| DELETE | `/api/history` | Clear prediction history |
-
-### Example prediction JSON
-
-```json
-{
-  "aircraft_id": "AG-204",
-  "fan_inlet_temp": 36,
-  "core_speed": 9300,
-  "vibration": 1.8,
-  "oil_pressure": 50,
-  "exhaust_temp": 590,
-  "fuel_flow": 2.1,
-  "operating_cycles": 180
-}
+```text
+http://127.0.0.1:8000
 ```
 
-## ML workflow
+### 8. Explore API Documentation
 
-1. Generate a reproducible synthetic sensor dataset.
-2. Create risk labels and RUL targets using transparent teaching formulas.
-3. Split into training and validation sets.
-4. Train Random Forest classification and regression models.
-5. Calculate validation accuracy and mean absolute error.
-6. Accept new readings through the API and return predictions.
-7. Persist prediction metadata in SQLite.
+```text
+http://127.0.0.1:8000/docs
+```
 
-The displayed model metrics describe performance on a synthetic validation split only. They should not be represented as real-world aircraft-engine accuracy.
+## 📈 Future Enhancements
 
-## Next-level improvements
+- Compare additional Machine Learning algorithms.
+- Improve model performance through advanced tuning.
+- Add real-time sensor data integration.
+- Develop advanced predictive maintenance analytics.
+- Deploy the application to a cloud platform.
 
-1. Replace generated data with a properly licensed NASA C-MAPSS dataset.
-2. Compare Random Forest, XGBoost, and sequence models.
-3. Add time-series trend charts and sensor drift detection.
-4. Add user authentication and role-based access.
-5. Add Docker deployment and CI tests.
-6. Add SHAP explanations after validating the model and explanation setup.
-7. Track model versions, dataset lineage, and drift.
+## ⚠️ Disclaimer
 
-## Resume description
+This project is developed for educational and demonstration purposes using the NASA C-MAPSS dataset. It is not certified or validated for real-world aircraft maintenance or aviation safety decisions.
 
-**AeroGuard AI — Explainable Aircraft Engine Health Monitoring System**
+## 👨‍💻 Author
 
-Built a full-stack predictive-maintenance prototype using Python, FastAPI, scikit-learn, SQLite, and JavaScript. Developed Random Forest classification and regression models to estimate synthetic engine risk levels and remaining useful life from sensor readings. Implemented REST APIs, an interactive monitoring dashboard, feature-importance visualization, and prediction-history tracking.
+G.Jeshwanth
 
-## Suggested interview explanation
+Machine Learning | Python | Data Analytics
 
-"I built AeroGuard AI as an aerospace predictive-maintenance learning project. The frontend collects engine sensor readings and sends them to a FastAPI backend. The backend validates the payload and passes it to two trained Random Forest models: one classifies the risk level, while the other estimates remaining useful life in cycles. The API returns probabilities, RUL, and global feature importance, and saves the result in SQLite. The current model uses synthetic data, so I would validate and retrain it on an appropriate real dataset before making any operational claims."
+---
+
+⭐ If you find this project interesting, consider giving this repository a star!
