@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AeroGuard AI | Engine Intelligence</title>
+<link rel="stylesheet" href="/style.css?v=2">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-mark">AG</div><div><b>AeroGuard</b><small>ENGINE INTELLIGENCE</small></div></div>
+    <div class="nav-label">WORKSPACE</div>
+    <a class="nav active" href="#overview">▦ <span>Overview</span></a>
+    <a class="nav" href="#monitor">◉ <span>Engine monitor</span></a>
+    <a class="nav" href="#history">◷ <span>Prediction history</span></a>
+    <div class="sidebar-bottom"><span class="pulse"></span> Demo system online</div>
+  </aside>
+  <main class="main">
+    <header class="topbar"><div><div class="eyebrow">AEROSPACE / PREDICTIVE MAINTENANCE</div><h1>Engine Health Overview</h1></div>
+      <div class="top-right"><span class="live"><i></i> LIVE DEMO</span><div class="avatar">AI</div></div>
+    </header>
+    <section class="hero">
+      <div><div class="eyebrow light">INTELLIGENCE THAT LOOKS AHEAD</div><h2>Know the engine.<br><em>Before it tells you.</em></h2>
+      <p>Analyze sensor behavior, estimate remaining useful life, and prioritize maintenance review — all in one workspace.</p>
+      <a class="hero-btn" href="#monitor">Run engine analysis <b>↗</b></a></div>
+      <div class="engine-art"><div class="orbit orbit1"></div><div class="orbit orbit2"></div><div class="engine-core">✧</div><div class="orbit-label label-a">SENSOR STREAM <b>ACTIVE</b></div><div class="orbit-label label-b">RUL MODEL <b>READY</b></div></div>
+    </section>
+    <section class="metrics-grid" id="overview">
+      <div class="metric-card"><div class="metric-head">MODEL ACCURACY <span>◎</span></div><div class="metric-value" id="accuracy">--</div><div class="metric-foot">Synthetic validation split</div></div>
+      <div class="metric-card"><div class="metric-head">RUL MODEL MAE <span>⌁</span></div><div class="metric-value" id="mae">--</div><div class="metric-foot">Mean absolute error (cycles)</div></div>
+      <div class="metric-card"><div class="metric-head">MODEL FEATURES <span>⌗</span></div><div class="metric-value" id="features">--</div><div class="metric-foot">Engine sensor inputs</div></div>
+      <div class="metric-card"><div class="metric-head">SAVED PREDICTIONS <span>◷</span></div><div class="metric-value" id="total">0</div><div class="metric-foot">Stored in local SQLite database</div></div>
+    </section>
+    <section class="content-grid" id="monitor">
+      <div class="panel form-panel">
+        <div class="section-title"><div><div class="eyebrow">INPUT / TELEMETRY</div><h3>Engine sensor readings</h3></div><span class="tag">MODEL INPUT</span></div>
+        <form id="sensorForm">
+          <label>Aircraft ID<input name="aircraft_id" value="AG-204" required></label>
+          <div class="form-grid">
+            <label>Fan inlet temp <small>°C</small><input name="fan_inlet_temp" type="number" step="0.1" value="36" required></label>
+            <label>Core speed <small>RPM</small><input name="core_speed" type="number" step="1" value="9300" required></label>
+            <label>Vibration <small>mm/s demo</small><input name="vibration" type="number" step="0.01" value="1.8" required></label>
+            <label>Oil pressure <small>psi demo</small><input name="oil_pressure" type="number" step="0.1" value="50" required></label>
+            <label>Exhaust temp <small>°C demo</small><input name="exhaust_temp" type="number" step="0.1" value="590" required></label>
+            <label>Fuel flow <small>kg/s demo</small><input name="fuel_flow" type="number" step="0.01" value="2.1" required></label>
+            <label class="full">Operating cycles <small>cycles</small><input name="operating_cycles" type="number" step="1" value="180" required></label>
+          </div>
+          <div class="form-actions"><button class="secondary" type="button" id="sampleBtn">Load high-risk sample</button><button class="primary" type="submit" id="runBtn">Analyze engine <span>→</span></button></div>
+          <div id="error" class="error"></div>
+        </form>
+      </div>
+      <div class="panel result-panel">
+        <div class="section-title"><div><div class="eyebrow">PREDICTIVE ANALYTICS</div><h3>Health assessment</h3></div><span class="tag">ML OUTPUT</span></div>
+        <div id="emptyState" class="empty-state"><div class="empty-icon">⌁</div><b>Awaiting sensor data</b><p>Submit a sensor profile to generate an engine health assessment.</p></div>
+        <div id="result" class="result hidden">
+          <div class="risk-row"><div><small>ENGINE RISK LEVEL</small><div id="risk" class="risk-value">--</div></div><div class="risk-gauge" id="gauge">--</div></div>
+          <div class="rul-box"><div><small>ESTIMATED REMAINING USEFUL LIFE</small><div><strong id="rul">--</strong> <span>cycles</span></div></div><div class="rul-icon">◷</div></div>
+          <div class="priority"><small>MAINTENANCE GUIDANCE</small><b id="priority">--</b></div>
+          <div class="chart-wrap"><div class="chart-title">Risk probability distribution</div><canvas id="riskChart"></canvas></div>
+          <div class="chart-title explain-title">Model feature importance <small>Global model importance</small></div><div id="explain" class="explain"></div>
+          <p class="model-note" id="modelNote"></p>
+        </div>
+      </div>
+    </section>
+    
+<section class="panel nasa-panel" id="nasa-monitor">
+  <div class="section-title">
+    <div>
+      <div class="eyebrow">NASA / C-MAPSS DATASET</div>
+      <h3>NASA Engine RUL Prediction</h3>
+    </div>
+    <span class="tag">RANDOM FOREST MODEL</span>
+  </div>
+
+  <p class="nasa-description">
+    Enter NASA FD001 engine cycle, operating settings and sensor readings
+    to estimate Remaining Useful Life.
+  </p>
+
+  <form id="nasaForm">
+    <label>
+      Engine ID
+      <input name="engine_id" value="NASA-FD001" required>
+    </label>
+
+    <label>
+      Engine Cycle
+      <input name="cycle" type="number" min="1" value="100" required>
+    </label>
+
+    <h4>Operating Settings (3 values)</h4>
+    <div class="form-grid">
+      <label>Setting 1
+        <input name="setting_1" type="number" step="any" value="0.0023" required>
+      </label>
+      <label>Setting 2
+        <input name="setting_2" type="number" step="any" value="0.0003" required>
+      </label>
+      <label>Setting 3
+        <input name="setting_3" type="number" step="any" value="100" required>
+      </label>
+    </div>
+
+    <h4>Sensor Readings (21 values)</h4>
+    <div class="form-grid" id="nasaSensors">
+      <!-- Sensor inputs are generated using JavaScript -->
+    </div>
+
+    <div class="form-actions">
+      <button class="secondary" type="button" id="nasaSampleBtn">
+        Load sample data
+      </button>
+      <button class="primary" type="submit" id="nasaRunBtn">
+        Predict NASA RUL →
+      </button>
+    </div>
+
+    <div id="nasaError" class="error"></div>
+  </form>
+
+  <div id="nasaResult" class="nasa-result hidden">
+    <div class="rul-box">
+      <div>
+        <small>NASA PREDICTED REMAINING USEFUL LIFE</small>
+        <div>
+          <strong id="nasaRul">--</strong>
+          <span>cycles</span>
+        </div>
+      </div>
+      <div class="rul-icon">◷</div>
+    </div>
+    <p id="nasaMessage"></p>
+    <small>Model: NASA FD001 Random Forest</small>
+  </div>
+</section>
+
+    <section class="panel history-panel" id="history">
+      <div class="section-title"><div><div class="eyebrow">AUDIT TRAIL</div><h3>Recent predictions</h3></div><button id="refreshBtn" class="text-btn">↻ Refresh</button></div>
+      <div class="table-wrap"><table><thead><tr><th>Prediction</th><th>Timestamp</th><th>Aircraft</th><th>Risk</th><th>Estimated RUL</th><th>Priority</th></tr></thead><tbody id="historyBody"><tr><td colspan="6" class="empty-table">No predictions yet.</td></tr></tbody></table></div>
+    </section>
+    <footer> AEROGUARD AI · EDUCATIONAL PROTOTYPE · NOT FOR FLIGHT OR MAINTENANCE DECISIONS</footer>
+  </main>
+</div>
+<script src="/app.js"></script>
+</body></html>

@@ -1,0 +1,12 @@
+{
+  "name": "AeroGuard AI",
+  "type": "Full-stack ML aerospace educational prototype",
+  "backend": "FastAPI",
+  "frontend": "HTML, CSS, JavaScript, Chart.js",
+  "ml": [
+    "RandomForestClassifier",
+    "RandomForestRegressor"
+  ],
+  "database": "SQLite",
+  "warning": "Synthetic data only; not for aviation operational decisions"
+}

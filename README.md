@@ -1,214 +1,149 @@
-##  AeroGuard AI – Aircraft Engine Health Monitoring System
-
-An AI-powered predictive maintenance application that estimates the Remaining Useful Life (RUL) of aircraft engines using NASA C-MAPSS FD001 data and Machine Learning.
-
-#📌 Project Overview
-
-AeroGuard AI uses a Random Forest Regression model to predict the remaining operating cycles of an aircraft engine before its dataset-defined failure point.
-
-The application provides a web dashboard where users can enter engine operating conditions and sensor readings to receive an estimated RUL prediction.
-
-#🎯 Project Objectives
-
-Predict aircraft engine Remaining Useful Life (RUL).
-
-Analyze engine operating conditions and sensor readings.
-
-Apply Machine Learning for predictive maintenance.
-
-Evaluate and optimize model performance.
-
-Display predictions through an interactive web dashboard.
-
-#🛠️ Technologies Used
-
-Category
-
-Technologies
-
-Programming
-
-Python
-
-Machine Learning
-
-Scikit-learn
-
-Data Processing
-
-Pandas, NumPy
-
-Visualization
-
-Matplotlib
-
-Backend
-
-FastAPI
-
-Frontend
-
-HTML, CSS, JavaScript
-
-Database
-
-SQLite
-
-Dataset
-
-NASA C-MAPSS FD001
-
-#🧠 Machine Learning Workflow
-
-Load NASA C-MAPSS FD001 dataset.
-
-Perform data preprocessing.
-
-Calculate Remaining Useful Life (RUL).
-
-Apply RUL clipping at 125 cycles.
-
-Train Random Forest Regression model.
-
-Evaluate model using MAE and RMSE.
-
-Analyze feature importance.
-
-Perform hyperparameter tuning.
-
-Compare original and tuned models.
-
-Integrate the tuned model with FastAPI.
-#
-📊 Model Performance
-
-Evaluation Metric
-
-Original Model
-
-Tuned Model
-
-MAE
-
-13.37
-
-13.34
-
-RMSE
-
-17.84
-
-17.77
-
-The tuned model achieved a slight improvement over the original model on the NASA FD001 test dataset.
-
-#🔍 Feature Importance
-
-Top features identified by the original Random Forest model:
-
-Sensor 11 – 49.80%
-
-Cycle – 25.93%
-
-Sensor 9 – 5.51%
-
-Sensor 4 – 4.70%
-
-These scores indicate how much the model relied on each feature when making predictions.
-
-#🌐 Application Features
-
-Interactive engine health monitoring dashboard.
-
-NASA engine sensor input form.
-
-Sample sensor data loading.
-
-Real-time RUL prediction through FastAPI.
-
-SQLite-based prediction history.
-
-Original and tuned Random Forest models.
-
-Model evaluation and feature importance analysis.
-
-#🏗️ Project Architecture
-
+# AeroGuard AI — Aircraft Engine Health Intelligence
+
+A full-stack aerospace + machine-learning portfolio project. It accepts engine sensor readings, predicts a synthetic risk category, estimates remaining useful life (RUL) in cycles, shows global model feature importance, and stores prediction history.
+
+> **Important:** This is an educational prototype trained on generated synthetic data. It is not validated against real aircraft data, certified, or suitable for flight operations, maintenance decisions, or safety-critical use. Sensor ranges and generated labels are demonstration assumptions only.
+
+## Features
+
+- **Frontend:** Responsive HTML, CSS, JavaScript dashboard with Chart.js.
+- **Backend:** FastAPI REST API with request validation.
+- **ML:** Random Forest classifier for LOW / MODERATE / HIGH risk and Random Forest regressor for estimated RUL.
+- **Explainability:** Displays global feature importance. This is not a causal or per-prediction explanation.
+- **Database:** SQLite prediction history.
+- **Model metrics:** Validation accuracy and RUL MAE displayed on the dashboard.
+- **API docs:** Interactive Swagger docs at `/docs`.
+
+## Architecture
+
+```text
+Browser dashboard (HTML/CSS/JS + Chart.js)
+                 |
+                 | HTTP / JSON
+                 v
+          FastAPI REST API
+           /      |       \
+          /       |        \
+   ML Engine   SQLite DB   Metrics
+      |
+      +-- RandomForest risk classifier
+      +-- RandomForest RUL regressor
+      |
+      v
+ Synthetic training data (generated in Python)
+```
+
+## Project structure
+
+```text
 AeroGuard_AI/
-│
 ├── app/
+│   ├── __init__.py
 │   ├── main.py
 │   ├── ml_engine.py
 │   └── static/
 │       ├── index.html
 │       ├── style.css
 │       └── app.js
-│
 ├── data/
-│   └── nasa/
-│       ├── train_FD001.txt
-│       ├── test_FD001.txt
-│       └── RUL_FD001.txt
-│
-├── models/
-│   ├── nasa_fd001_rul.joblib
-│   └── nasa_fd001_tuned.joblib
-│
-├── train_nasa_model.py
-├── evaluate_nasa_model.py
-├── feature_importance.py
-├── tune_nasa_model.py
-└── compare_models.py
+├── tests/
+│   └── test_api.py
+├── requirements.txt
+├── run_windows.bat
+├── run_mac_linux.sh
+└── README.md
+```
 
-#⚙️ Installation and Execution
+## Run locally
 
-1. Clone the repository
+### 1. Install Python
+Use Python 3.10–3.12. Confirm:
 
-git clone YOUR_GITHUB_REPOSITORY_URL
-cd AeroGuard_AI
+```bash
+python --version
+```
 
-2. Create virtual environment
+### 2. Open terminal in the project folder
 
-python -m venv venv
+Windows:
 
-3. Activate environment (Windows)
-
-.\venv\Scripts\Activate.ps1
-
-4. Install dependencies
-
-pip install fastapi uvicorn pandas numpy scikit-learn matplotlib joblib
-
-5. Start the application
-
+```powershell
+py -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
 uvicorn app.main:app --reload
+```
 
-6. Open the dashboard
+macOS / Linux:
 
-http://127.0.0.1:8000
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+```
 
-API documentation:
+### 3. Open the application
 
-http://127.0.0.1:8000/docs
+- Dashboard: http://127.0.0.1:8000
+- API documentation: http://127.0.0.1:8000/docs
+- Health endpoint: http://127.0.0.1:8000/api/health
 
-#📈 Future Enhancements
+The ML models train automatically when the backend starts. The first startup may take a few seconds.
 
-Compare multiple ML algorithms.
+## API endpoints
 
-Add engine health status classification.
+| Method | Endpoint | Purpose |
+|---|---|---|
+| GET | `/api/health` | Check API status |
+| GET | `/api/metrics` | Get model validation metrics |
+| POST | `/api/predict` | Predict risk and RUL |
+| GET | `/api/history` | Read recent prediction history |
+| DELETE | `/api/history` | Clear prediction history |
 
-Develop advanced sensor trend visualizations.
+### Example prediction JSON
 
-Implement historical engine performance analytics.
+```json
+{
+  "aircraft_id": "AG-204",
+  "fan_inlet_temp": 36,
+  "core_speed": 9300,
+  "vibration": 1.8,
+  "oil_pressure": 50,
+  "exhaust_temp": 590,
+  "fuel_flow": 2.1,
+  "operating_cycles": 180
+}
+```
 
-Deploy the application to a cloud platform.
+## ML workflow
 
-⚠️ Disclaimer
+1. Generate a reproducible synthetic sensor dataset.
+2. Create risk labels and RUL targets using transparent teaching formulas.
+3. Split into training and validation sets.
+4. Train Random Forest classification and regression models.
+5. Calculate validation accuracy and mean absolute error.
+6. Accept new readings through the API and return predictions.
+7. Persist prediction metadata in SQLite.
 
-This is an educational Machine Learning project using the NASA C-MAPSS benchmark dataset. Predictions are experimental and must not be used for actual aircraft operation, safety, or maintenance decisions.
+The displayed model metrics describe performance on a synthetic validation split only. They should not be represented as real-world aircraft-engine accuracy.
 
-👨‍💻 Author
+## Next-level improvements
 
-Gunda Jeshwanth
+1. Replace generated data with a properly licensed NASA C-MAPSS dataset.
+2. Compare Random Forest, XGBoost, and sequence models.
+3. Add time-series trend charts and sensor drift detection.
+4. Add user authentication and role-based access.
+5. Add Docker deployment and CI tests.
+6. Add SHAP explanations after validating the model and explanation setup.
+7. Track model versions, dataset lineage, and drift.
 
-Machine Learning | Python | Predictive Maintenance | Data Analytics
+## Resume description
+
+**AeroGuard AI — Explainable Aircraft Engine Health Monitoring System**
+
+Built a full-stack predictive-maintenance prototype using Python, FastAPI, scikit-learn, SQLite, and JavaScript. Developed Random Forest classification and regression models to estimate synthetic engine risk levels and remaining useful life from sensor readings. Implemented REST APIs, an interactive monitoring dashboard, feature-importance visualization, and prediction-history tracking.
+
+## Suggested interview explanation
+
+"I built AeroGuard AI as an aerospace predictive-maintenance learning project. The frontend collects engine sensor readings and sends them to a FastAPI backend. The backend validates the payload and passes it to two trained Random Forest models: one classifies the risk level, while the other estimates remaining useful life in cycles. The API returns probabilities, RUL, and global feature importance, and saves the result in SQLite. The current model uses synthetic data, so I would validate and retrain it on an appropriate real dataset before making any operational claims."
